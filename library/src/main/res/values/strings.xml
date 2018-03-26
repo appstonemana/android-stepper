@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Stepper</string>
-
-    <string-array name="stepLabels">
-        <item>Approval</item>
-        <item>Processed</item>
-        <item>Shipped</item>
-        <item>Delivery</item>
-    </string-array>
 </resources>

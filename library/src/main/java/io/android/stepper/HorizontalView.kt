@@ -1,10 +1,16 @@
-package com.radityalabs.stepcircle
+package io.android.stepper
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.DashPathEffect
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PathEffect
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
@@ -16,26 +22,23 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import java.util.*
+import io.android.stepper.StepperOrientation.HORIZONTAL
+import java.util.ArrayList
 import kotlin.properties.Delegates
 
-/**
- * mimic functionality from https://github.com/badoualy/stepper-indicator
- * and modified as needed
- */
-class StepIndicatorHorizontalView @JvmOverloads constructor(context: Context,
-                                                            attrs: AttributeSet? = null,
-                                                            defStyle: Int = 0) : View(context, attrs, defStyle) {
+class HorizontalView @JvmOverloads constructor(context: Context,
+                                               attrs: AttributeSet? = null,
+                                               defStyle: Int = 0) : View(context, attrs, defStyle) {
 
     companion object {
-        private val TAG = StepIndicatorHorizontalView::class.java.simpleName
+        private val TAG = HorizontalView::class.java.simpleName
 
         private const val DEFAULT_ANIMATION_DURATION = 200
         private const val EXPAND_MARK = 1.3f
         private const val STEP_INVALID = -1
     }
 
-    private var orientation = StepOrientation.HORIZONTAL
+    private var orientation = HORIZONTAL
     private var animDuration: Int = 0
     private var stepCount: Int = 0
     private var currentStep: Int = 0
@@ -119,7 +122,7 @@ class StepIndicatorHorizontalView @JvmOverloads constructor(context: Context,
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (orientation == StepOrientation.HORIZONTAL) {
+        if (orientation == HORIZONTAL) {
             horizontal(canvas)
         }
     }
@@ -142,7 +145,7 @@ class StepIndicatorHorizontalView @JvmOverloads constructor(context: Context,
         return savedState
     }
 
-    fun setOrientation(orientation: StepOrientation) {
+    fun setOrientation(orientation: StepperOrientation) {
         this.orientation = orientation
         this.currentStep = 0
         compute()
@@ -357,7 +360,7 @@ class StepIndicatorHorizontalView @JvmOverloads constructor(context: Context,
     }
 
     private fun compute() {
-        if (orientation == StepOrientation.HORIZONTAL) {
+        if (orientation == HORIZONTAL) {
             indicators = FloatArray(stepCount)
             linePathList.clear()
             val gridWidth = measuredWidth / stepCount
@@ -481,8 +484,4 @@ class StepIndicatorHorizontalView @JvmOverloads constructor(context: Context,
     interface OnStepClickListener {
         fun onStepClicked(step: Int)
     }
-}
-
-enum class StepOrientation {
-    HORIZONTAL, VERTICAL
 }
