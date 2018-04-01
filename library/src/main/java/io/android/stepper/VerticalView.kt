@@ -340,7 +340,7 @@ class VerticalView @JvmOverloads constructor(context: Context,
             color = ContextCompat.getColor(context, R.color.stepper_grey)
             isAntiAlias = true
         }
-        setStepCount(4)
+        setStepCount(5)
     }
 
     private fun initIndicatorPaint() {
