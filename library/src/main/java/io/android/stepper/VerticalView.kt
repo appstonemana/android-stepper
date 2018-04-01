@@ -132,7 +132,7 @@ class VerticalView @JvmOverloads constructor(context: Context,
 
     override fun onDraw(canvas: Canvas) {
         if (orientation == VERTICAL) {
-            horizontal(canvas)
+            vertical(canvas)
         }
     }
 
@@ -175,7 +175,7 @@ class VerticalView @JvmOverloads constructor(context: Context,
         }
     }
 
-    private fun horizontal(canvas: Canvas) {
+    private fun vertical(canvas: Canvas) {
         val x = 50f
 
         val inLineAnimation = lineAnimator?.isRunning ?: false
@@ -188,7 +188,7 @@ class VerticalView @JvmOverloads constructor(context: Context,
             val indicator = indicators[i]
             val drawDoneState = i < currentStep || drawFromNext && i == currentStep
 
-            // we had constant x that mean horizontal
+            // we had constant x that mean vertical
             canvas.drawCircle(x, indicator, circleRadius, getStepCirclePaint(i))
             val stepLabel = (i + 1).toString()
 
