@@ -301,8 +301,9 @@ class VerticalView @JvmOverloads constructor(context: Context,
         invalidate()
     }
 
+    @SuppressLint("CustomViewStyleable")
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        typeArray = context.obtainStyledAttributes(attrs, R.styleable.VerticalView, defStyleAttr, 0)
+        typeArray = context.obtainStyledAttributes(attrs, R.styleable.Stepper, defStyleAttr, 0)
         stepsCirclePaintList = ArrayList(stepCount)
 
         for (i in 0 until stepCount) {
@@ -372,7 +373,7 @@ class VerticalView @JvmOverloads constructor(context: Context,
 
     private fun initLinePaint() {
         linePaint = Paint().apply {
-            strokeWidth = typeArray.getDimension(R.styleable.VerticalView_stepper_lineStrokeWidth, 4f)
+            strokeWidth = typeArray.getDimension(R.styleable.Stepper_lineStrokeWidth, 4f)
             strokeCap = Paint.Cap.ROUND
             style = Paint.Style.STROKE
             color = ContextCompat.getColor(context, R.color.stepper_grey)
@@ -387,14 +388,14 @@ class VerticalView @JvmOverloads constructor(context: Context,
     }
 
     private fun initRadius() {
-        circleRadius = typeArray.getDimension(R.styleable.VerticalView_stepper_circleRadius, defaultCircleRadius)
+        circleRadius = typeArray.getDimension(R.styleable.Stepper_circleRadius, defaultCircleRadius)
         checkRadius = circleRadius + circlePaint.strokeWidth / 2f
-        indicatorRadius = typeArray.getDimension(R.styleable.VerticalView_stepper_indicatorRadius, defaultIndicatorRadius)
+        indicatorRadius = typeArray.getDimension(R.styleable.Stepper_indicatorRadius, defaultIndicatorRadius)
         animIndicatorRadius = indicatorRadius
         animCheckRadius = checkRadius
-        lineMargin = typeArray.getDimension(R.styleable.VerticalView_stepper_lineMargin, defaultLineMargin)
-        animDuration = typeArray.getInteger(R.styleable.VerticalView_stepper_animDuration, DEFAULT_ANIMATION_DURATION)
-        showDoneIcon = typeArray.getBoolean(R.styleable.VerticalView_stepper_showDoneIcon, true)
+        lineMargin = typeArray.getDimension(R.styleable.Stepper_lineMargin, defaultLineMargin)
+        animDuration = typeArray.getInteger(R.styleable.Stepper_animDuration, DEFAULT_ANIMATION_DURATION)
+        showDoneIcon = typeArray.getBoolean(R.styleable.Stepper_showDoneIcon, true)
     }
 
     private fun compute() {
