@@ -1,7 +1,7 @@
 <resources>
-    <color name="stepper_default_primary_color">#00b47c</color>
-    <color name="stepper_black">#333333</color>
-    <color name="stepper_white">#ffffff</color>
-    <color name="stepper_grey">#e1e0e1</color>
-    <color name="stepper_green">#45ab4a</color>
+    <color name="stepper_default_circle">#45ab4a</color>
+    <color name="stepper_default_primary">#00b47c</color>
+    <color name="stepper_default_text">#ffffff</color>
+    <color name="stepper_default_horizontal_line">#e1e0e1</color>
+    <color name="stepper_default_vertical_line">#333333</color>
 </resources>

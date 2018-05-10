@@ -37,6 +37,8 @@ class VerticalView @JvmOverloads constructor(context: Context,
         private const val STEP_INVALID = -1
     }
 
+    var text: String? = null
+
     private var orientation = VERTICAL
     private var animDuration: Int = 0
     private var stepCount: Int = 0
@@ -213,9 +215,9 @@ class VerticalView @JvmOverloads constructor(context: Context,
             canvas.drawText(stepLabel, stepAreaRectF.left, stepAreaRectF.top - stepTextNumberPaint.ascent(), stepTextNumberPaint)
 
             // draw text in vertical
-            canvas.drawText("Hello world", x * 3, stepAreaRectF.top - stepTextNumberPaint.ascent(), getStepTextVerticalNumberPaint(i))
+            canvas.drawText(text, x * 3, stepAreaRectF.top - stepTextNumberPaint.ascent(), getStepTextVerticalNumberPaint(i))
             if (drawDoneState) {
-                canvas.drawText("Hello world", x * 3, stepAreaRectF.top - stepTextNumberPaint.ascent(), getStepTextVerticalIndicatorNumberPaint(i))
+                canvas.drawText(text, x * 3, stepAreaRectF.top - stepTextNumberPaint.ascent(), getStepTextVerticalIndicatorNumberPaint(i))
             }
 
             if (i < linePathList.size) {
@@ -303,12 +305,12 @@ class VerticalView @JvmOverloads constructor(context: Context,
 
     @SuppressLint("CustomViewStyleable")
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        typeArray = context.obtainStyledAttributes(attrs, R.styleable.Stepper, defStyleAttr, 0)
+        typeArray = context.obtainStyledAttributes(attrs, R.styleable.stepper, defStyleAttr, 0)
         stepsCirclePaintList = ArrayList(stepCount)
 
         for (i in 0 until stepCount) {
             val circlePaint = Paint(this.circlePaint)
-            circlePaint.color = ContextCompat.getColor(context, R.color.stepper_green)
+            circlePaint.color = ContextCompat.getColor(context, R.color.stepper_default_circle)
             stepsCirclePaintList.add(circlePaint)
         }
 
@@ -328,16 +330,16 @@ class VerticalView @JvmOverloads constructor(context: Context,
     private fun initDimens() {
         val resources = resources
         defaultPrimaryColor = getPrimaryColor(context)
-        defaultCircleRadius = resources.getDimension(R.dimen.stepper_circle_size)
-        defaultIndicatorRadius = resources.getDimension(R.dimen.stepper_default_indicator_radius)
-        defaultLineMargin = resources.getDimension(R.dimen.stepper_default_line_margin)
+        defaultCircleRadius = resources.getDimension(R.dimen.stepper_default_circle)
+        defaultIndicatorRadius = resources.getDimension(R.dimen.stepper_default_indicator)
+        defaultLineMargin = resources.getDimension(R.dimen.stepper_default_line)
     }
 
     private fun initCirclePaint() {
         circlePaint = Paint().apply {
             strokeWidth = 4f
             style = Paint.Style.FILL
-            color = ContextCompat.getColor(context, R.color.stepper_grey)
+            color = ContextCompat.getColor(context, R.color.stepper_default_horizontal_line)
             isAntiAlias = true
         }
         setStepCount(5)
@@ -346,56 +348,56 @@ class VerticalView @JvmOverloads constructor(context: Context,
     private fun initIndicatorPaint() {
         indicatorPaint = Paint(circlePaint).apply {
             style = Paint.Style.FILL
-            color = ContextCompat.getColor(context, R.color.stepper_green)
+            color = ContextCompat.getColor(context, R.color.stepper_default_circle)
             isAntiAlias = true
         }
     }
 
     private fun initTextPaint() {
         stepTextPaint = Paint(indicatorPaint).apply {
-            color = ContextCompat.getColor(context, R.color.stepper_white)
-            textSize = resources.getDimension(R.dimen.stepper_default_text_size)
+            color = ContextCompat.getColor(context, R.color.stepper_default_text)
+            textSize = resources.getDimension(R.dimen.stepper_default_horizontal_text)
         }
     }
 
     private fun initVerticalPaint() {
         stepVerticalPaint = Paint(indicatorPaint).apply {
-            textSize = resources.getDimension(R.dimen.stepper_default_text_vertical_size)
-            color = ContextCompat.getColor(context, R.color.stepper_grey)
+            textSize = resources.getDimension(R.dimen.stepper_default_vertical_text)
+            color = ContextCompat.getColor(context, R.color.stepper_default_horizontal_line)
         }
     }
 
     private fun initVerticalIndicatorPaint() {
         stepVerticalIndicatorPaint = Paint(stepVerticalPaint).apply {
-            color = ContextCompat.getColor(context, R.color.stepper_black)
+            color = ContextCompat.getColor(context, R.color.stepper_default_vertical_line)
         }
     }
 
     private fun initLinePaint() {
         linePaint = Paint().apply {
-            strokeWidth = typeArray.getDimension(R.styleable.Stepper_lineStrokeWidth, 4f)
+            strokeWidth = typeArray.getDimension(R.styleable.stepper_line_stroke_width, 4f)
             strokeCap = Paint.Cap.ROUND
             style = Paint.Style.STROKE
-            color = ContextCompat.getColor(context, R.color.stepper_grey)
+            color = ContextCompat.getColor(context, R.color.stepper_default_horizontal_line)
             isAntiAlias = true
         }
 
         lineDonePaint = Paint(linePaint).apply {
-            color = ContextCompat.getColor(context, R.color.stepper_green)
+            color = ContextCompat.getColor(context, R.color.stepper_default_circle)
         }
 
         lineDoneAnimatedPaint = Paint(lineDonePaint)
     }
 
     private fun initRadius() {
-        circleRadius = typeArray.getDimension(R.styleable.Stepper_circleRadius, defaultCircleRadius)
+        circleRadius = typeArray.getDimension(R.styleable.stepper_circle_radius, defaultCircleRadius)
         checkRadius = circleRadius + circlePaint.strokeWidth / 2f
-        indicatorRadius = typeArray.getDimension(R.styleable.Stepper_indicatorRadius, defaultIndicatorRadius)
+        indicatorRadius = typeArray.getDimension(R.styleable.stepper_indicator_radius, defaultIndicatorRadius)
         animIndicatorRadius = indicatorRadius
         animCheckRadius = checkRadius
-        lineMargin = typeArray.getDimension(R.styleable.Stepper_lineMargin, defaultLineMargin)
-        animDuration = typeArray.getInteger(R.styleable.Stepper_animDuration, DEFAULT_ANIMATION_DURATION)
-        showDoneIcon = typeArray.getBoolean(R.styleable.Stepper_showDoneIcon, true)
+        lineMargin = typeArray.getDimension(R.styleable.stepper_line_margin, defaultLineMargin)
+        animDuration = typeArray.getInteger(R.styleable.stepper_anim_duration, DEFAULT_ANIMATION_DURATION)
+        showDoneIcon = typeArray.getBoolean(R.styleable.stepper_show_done_icon, true)
     }
 
     private fun compute() {
@@ -468,12 +470,12 @@ class VerticalView @JvmOverloads constructor(context: Context,
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
                 val t = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
-                color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary_color))
+                color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary))
                 t.recycle()
             }
             else -> {
                 val t = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
-                color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary_color))
+                color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary))
                 t.recycle()
             }
         }

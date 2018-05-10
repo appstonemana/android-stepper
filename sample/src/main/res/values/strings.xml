@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Stepper</string>
+    <string name="menu_horizontal">Horizontal Stepper</string>
+    <string name="menu_vertical">Vertical Stepper</string>
 </resources>

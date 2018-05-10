@@ -12,16 +12,26 @@
         android:background="@color/colorPrimaryDark"
         app:titleTextColor="@color/colorPrimary" />
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:paddingTop="16dp">
 
-        <id.kotlin.stepper.VerticalView
+        <id.kotlin.stepper.HorizontalView
+            android:id="@+id/horizontal_stepper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.support.constraint.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <id.kotlin.stepper.VerticalView
+            android:id="@+id/vertical_stepper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </LinearLayout>
 </RelativeLayout>

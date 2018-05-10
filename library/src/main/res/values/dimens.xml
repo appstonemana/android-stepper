@@ -1,7 +1,7 @@
 <resources>
-    <dimen name="stepper_default_indicator_radius">0dip</dimen>
-    <dimen name="stepper_default_line_margin">5dp</dimen>
-    <dimen name="stepper_default_text_size">12sp</dimen>
-    <dimen name="stepper_default_text_vertical_size">18sp</dimen>
-    <dimen name="stepper_circle_size">14dp</dimen>
+    <dimen name="stepper_default_circle">14dp</dimen>
+    <dimen name="stepper_default_indicator">0dp</dimen>
+    <dimen name="stepper_default_line">5dp</dimen>
+    <dimen name="stepper_default_horizontal_text">12sp</dimen>
+    <dimen name="stepper_default_vertical_text">18sp</dimen>
 </resources>
