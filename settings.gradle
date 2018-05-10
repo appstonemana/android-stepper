@@ -1,2 +1,1 @@
-include ':android-stepper', ':sample'
-project(':android-stepper').projectDir = file('./library')
+include ':library', ':sample'
