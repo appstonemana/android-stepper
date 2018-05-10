@@ -13,7 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        vertical_stepper.text = "Hello world"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
