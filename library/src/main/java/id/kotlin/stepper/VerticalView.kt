@@ -1,4 +1,4 @@
-package io.android.stepper
+package id.kotlin.stepper
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -23,7 +23,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import io.android.stepper.StepperOrientation.VERTICAL
+import id.kotlin.stepper.StepperOrientation.VERTICAL
 import java.util.ArrayList
 import kotlin.properties.Delegates
 
@@ -472,7 +472,7 @@ class VerticalView @JvmOverloads constructor(context: Context,
                 t.recycle()
             }
             else -> {
-                val t = context.obtainStyledAttributes(intArrayOf(R.attr.colorPrimary))
+                val t = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
                 color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary_color))
                 t.recycle()
             }

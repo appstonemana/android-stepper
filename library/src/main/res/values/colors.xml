@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="stepper_default_primary_color">#00B47C</color>
+    <color name="stepper_default_primary_color">#00b47c</color>
     <color name="stepper_black">#333333</color>
-    <color name="stepper_white">#FFFFFF</color>
-    <color name="stepper_grey">#E1E0E1</color>
-    <color name="stepper_green">#45AB4A</color>
+    <color name="stepper_white">#ffffff</color>
+    <color name="stepper_grey">#e1e0e1</color>
+    <color name="stepper_green">#45ab4a</color>
 </resources>

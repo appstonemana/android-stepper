@@ -1,4 +1,4 @@
-package io.android.stepper
+package id.kotlin.stepper
 
 enum class StepperOrientation {
 
