@@ -22,6 +22,6 @@ and...
 
 ```gradle
 dependencies {
-    implementation 'com.github.budioktaviyan:android-stepper:1.0.0'
+    implementation "com.github.budioktaviyan:android-stepper:$latest_version"
 }
 ```
