@@ -1,6 +1,6 @@
 # Stepper - [![](https://jitpack.io/v/budioktaviyan/android-stepper.svg)](https://jitpack.io/#budioktaviyan/android-stepper)
 
-Forking from https://github.com/radityagumay/step_circle_indicator
+Forking from [Aditya Gumay](https://github.com/radityagumay/step_circle_indicator)
 
 Feature:
 * Horizontal step view
