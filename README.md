@@ -2,11 +2,11 @@
 
 Forking from [Aditya Gumay](https://github.com/radityagumay/step_circle_indicator)
 
-Feature:
+## Feature
 * Horizontal step view
 * Vertical step view
 
-How to install ?
+## How to install ?
 
 * Add this to your build.gradle
 
@@ -18,7 +18,7 @@ allprojects {
 }
 ```
 
-and...
+* Then add...
 
 ```gradle
 dependencies {
