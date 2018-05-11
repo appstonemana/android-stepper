@@ -1,2 +1,4 @@
 before_install:
-  - ./configure.sh
+  - rm settings.gradle
+  - echo "include ':library'" > settings.gradle
+  - cat settings.gradle
