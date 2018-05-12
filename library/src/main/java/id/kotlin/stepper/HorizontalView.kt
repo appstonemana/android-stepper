@@ -12,18 +12,16 @@ import android.graphics.Path
 import android.graphics.PathEffect
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Build
-import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import id.kotlin.stepper.StepperOrientation.HORIZONTAL
+import kotlinx.android.parcel.Parcelize
 import java.util.ArrayList
 import kotlin.properties.Delegates
 
@@ -31,17 +29,12 @@ class HorizontalView @JvmOverloads constructor(context: Context,
                                                attrs: AttributeSet? = null,
                                                defStyle: Int = 0) : View(context, attrs, defStyle) {
 
-    companion object {
-        private const val DEFAULT_ANIMATION_DURATION = 200
-        private const val EXPAND_MARK = 1.3f
-        private const val STEP_INVALID = -1
-    }
-
     private var orientation = HORIZONTAL
     private var animDuration: Int = 0
     private var stepCount: Int = 0
     private var currentStep: Int = 0
     private var previousStep: Int = 0
+    private var circleColor: Int = 0
 
     private var circleRadius: Float = 0f
     private var lineLength: Float = 0f
@@ -51,8 +44,6 @@ class HorizontalView @JvmOverloads constructor(context: Context,
     private var animProgress: Float = 0f
     private var animIndicatorRadius: Float = 0f
     private var animCheckRadius: Float = 0f
-
-    private var showDoneIcon: Boolean = false
 
     private val linePathList = ArrayList<Path>()
     private val onStepClickListeners = ArrayList<OnStepClickListener>(0)
@@ -66,7 +57,6 @@ class HorizontalView @JvmOverloads constructor(context: Context,
     private var indicatorAnimator: ObjectAnimator? = null
     private var checkAnimator: ObjectAnimator? = null
 
-    private var defaultPrimaryColor by Delegates.notNull<Int>()
     private var defaultCircleRadius by Delegates.notNull<Float>()
     private var defaultIndicatorRadius by Delegates.notNull<Float>()
     private var defaultLineMargin by Delegates.notNull<Float>()
@@ -84,7 +74,7 @@ class HorizontalView @JvmOverloads constructor(context: Context,
 
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            var clickedStep = STEP_INVALID
+            var clickedStep = StepperConfigs.STEP_INVALID
             stepsClickAreas?.let {
                 for (i in it.indices) {
                     if (it[i].contains(e.x, e.y)) {
@@ -93,7 +83,7 @@ class HorizontalView @JvmOverloads constructor(context: Context,
                     }
                 }
 
-                if (clickedStep != STEP_INVALID) {
+                if (clickedStep != StepperConfigs.STEP_INVALID) {
                     setCurrentStep(clickedStep)
 
                     for (listener in onStepClickListeners) {
@@ -118,7 +108,7 @@ class HorizontalView @JvmOverloads constructor(context: Context,
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), View.MeasureSpec.getSize(heightMeasureSpec))
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -212,12 +202,10 @@ class HorizontalView @JvmOverloads constructor(context: Context,
                     canvas.drawPath(linePathList[i], linePaint)
 
                     if (i == currentStep && drawFromNext && (inLineAnimation || inIndicatorAnimation)) {
-                        // go back
                         canvas.drawPath(linePathList[i], lineDoneAnimatedPaint)
                     }
                 } else {
                     if (i == currentStep - 1 && drawToNext && inLineAnimation) {
-                        // go forward
                         canvas.drawPath(linePathList[i], linePaint)
                         canvas.drawPath(linePathList[i], lineDoneAnimatedPaint)
                     } else {
@@ -256,7 +244,7 @@ class HorizontalView @JvmOverloads constructor(context: Context,
         if (currentStep == previousStep + 1) {
             animatorSet = AnimatorSet()
             lineAnimator = ObjectAnimator.ofFloat(this, "animProgress", 1.0f, 0.0f)
-            checkAnimator = ObjectAnimator.ofFloat(this, "animCheckRadius", indicatorRadius, checkRadius * EXPAND_MARK, checkRadius)
+            checkAnimator = ObjectAnimator.ofFloat(this, "animCheckRadius", indicatorRadius, checkRadius * StepperConfigs.EXPAND_MARK, checkRadius)
             animIndicatorRadius = 0f
             indicatorAnimator = ObjectAnimator.ofFloat(this, "animIndicatorRadius", 0f, indicatorRadius * 1.4f, indicatorRadius)
             animatorSet?.play(lineAnimator)?.with(checkAnimator)?.before(indicatorAnimator)
@@ -292,12 +280,15 @@ class HorizontalView @JvmOverloads constructor(context: Context,
 
     @SuppressLint("CustomViewStyleable")
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        typeArray = context.obtainStyledAttributes(attrs, R.styleable.stepper, defStyleAttr, 0)
+        typeArray = context.obtainStyledAttributes(attrs, R.styleable.stp, defStyleAttr, 0)
         stepsCirclePaintList = ArrayList(stepCount)
+
+        val defaultCircleColor = ContextCompat.getColor(context, R.color.default_circle)
+        circleColor = typeArray.getColor(R.styleable.stp_circle_color, defaultCircleColor)
 
         for (i in 0 until stepCount) {
             val circlePaint = Paint(this.circlePaint)
-            circlePaint.color = ContextCompat.getColor(context, R.color.stepper_default_circle)
+            circlePaint.color = ContextCompat.getColor(context, circleColor)
             stepsCirclePaintList.add(circlePaint)
         }
 
@@ -314,17 +305,16 @@ class HorizontalView @JvmOverloads constructor(context: Context,
 
     private fun initDimens() {
         val resources = resources
-        defaultPrimaryColor = getPrimaryColor(context)
-        defaultCircleRadius = resources.getDimension(R.dimen.stepper_default_circle)
-        defaultIndicatorRadius = resources.getDimension(R.dimen.stepper_default_indicator)
-        defaultLineMargin = resources.getDimension(R.dimen.stepper_default_line)
+        defaultCircleRadius = resources.getDimension(R.dimen.default_circle_radius)
+        defaultIndicatorRadius = resources.getDimension(R.dimen.default_indicator_radius)
+        defaultLineMargin = resources.getDimension(R.dimen.default_line_margin)
     }
 
     private fun initCirclePaint() {
         circlePaint = Paint().apply {
             strokeWidth = 4f
             style = Paint.Style.FILL
-            color = ContextCompat.getColor(context, R.color.stepper_default_horizontal_line)
+            color = ContextCompat.getColor(context, R.color.default_line)
             isAntiAlias = true
         }
         setStepCount(5)
@@ -333,43 +323,42 @@ class HorizontalView @JvmOverloads constructor(context: Context,
     private fun initIndicatorPaint() {
         indicatorPaint = Paint(circlePaint).apply {
             style = Paint.Style.FILL
-            color = ContextCompat.getColor(context, R.color.stepper_default_circle)
+            color = circleColor
             isAntiAlias = true
         }
     }
 
     private fun initTextPaint() {
         stepTextPaint = Paint(indicatorPaint).apply {
-            color = ContextCompat.getColor(context, R.color.stepper_default_text)
-            textSize = resources.getDimension(R.dimen.stepper_default_horizontal_text)
+            color = ContextCompat.getColor(context, R.color.default_text)
+            textSize = resources.getDimension(R.dimen.default_text_size)
         }
     }
 
     private fun initLinePaint() {
         linePaint = Paint().apply {
-            strokeWidth = typeArray.getDimension(R.styleable.stepper_line_stroke_width, 4f)
+            strokeWidth = typeArray.getDimension(R.styleable.stp_line_stroke_width, 4f)
             strokeCap = Paint.Cap.ROUND
             style = Paint.Style.STROKE
-            color = ContextCompat.getColor(context, R.color.stepper_default_horizontal_line)
+            color = ContextCompat.getColor(context, R.color.default_line)
             isAntiAlias = true
         }
 
         lineDonePaint = Paint(linePaint).apply {
-            color = ContextCompat.getColor(context, R.color.stepper_default_circle)
+            color = circleColor
         }
 
         lineDoneAnimatedPaint = Paint(lineDonePaint)
     }
 
     private fun initRadius() {
-        circleRadius = typeArray.getDimension(R.styleable.stepper_circle_radius, defaultCircleRadius)
+        circleRadius = typeArray.getDimension(R.styleable.stp_circle_radius, defaultCircleRadius)
         checkRadius = circleRadius + circlePaint.strokeWidth / 2f
-        indicatorRadius = typeArray.getDimension(R.styleable.stepper_indicator_radius, defaultIndicatorRadius)
+        indicatorRadius = typeArray.getDimension(R.styleable.stp_indicator_radius, defaultIndicatorRadius)
         animIndicatorRadius = indicatorRadius
         animCheckRadius = checkRadius
-        lineMargin = typeArray.getDimension(R.styleable.stepper_line_margin, defaultLineMargin)
-        animDuration = typeArray.getInteger(R.styleable.stepper_anim_duration, DEFAULT_ANIMATION_DURATION)
-        showDoneIcon = typeArray.getBoolean(R.styleable.stepper_show_done_icon, true)
+        lineMargin = typeArray.getDimension(R.styleable.stp_line_margin, defaultLineMargin)
+        animDuration = typeArray.getInteger(R.styleable.stp_anim_duration, StepperConfigs.DEFAULT_ANIMATION_DURATION)
     }
 
     private fun compute() {
@@ -424,29 +413,6 @@ class HorizontalView @JvmOverloads constructor(context: Context,
         return true
     }
 
-    private fun getPrimaryColor(context: Context): Int {
-        var color = context.resources.getIdentifier("colorPrimary", "attr", context.packageName)
-        when {
-            color != 0 -> {
-                val t = TypedValue()
-                context.theme.resolveAttribute(color, t, true)
-                color = t.data
-            }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-                val t = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
-                color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary))
-                t.recycle()
-            }
-            else -> {
-                val t = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
-                color = t.getColor(0, ContextCompat.getColor(context, R.color.stepper_default_primary))
-                t.recycle()
-            }
-        }
-
-        return color
-    }
-
     @Suppress("unused")
     private fun setAnimProgress(animProgress: Float) {
         this.animProgress = animProgress
@@ -470,27 +436,11 @@ class HorizontalView @JvmOverloads constructor(context: Context,
         return DashPathEffect(floatArrayOf(pathLength, pathLength), Math.max(phase * pathLength, offset))
     }
 
-    private class SavedState : View.BaseSavedState {
-
-        var currentStep: Int = 0
-
-        constructor(superState: Parcelable) : super(superState)
-        private constructor(source: Parcel) : super(source) {
-            currentStep = source.readInt()
-        }
-
-        companion object {
-            @Suppress("unused")
-            @JvmField val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-                override fun createFromParcel(source: Parcel): SavedState = SavedState(source)
-                override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
-            }
-        }
-
-        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-            writeInt(currentStep)
-        }
-    }
+    @Parcelize
+    private data class SavedState @JvmOverloads constructor(
+            var state: Parcelable,
+            var currentStep: Int = 0
+    ) : BaseSavedState(state)
 
     interface OnStepClickListener {
 

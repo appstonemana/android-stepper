@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="todos">
+        <item>Eat</item>
+        <item>Work</item>
+        <item>Sleep</item>
+        <item>Wake Up</item>
+        <item>Repeat</item>
+    </string-array>
+</resources>

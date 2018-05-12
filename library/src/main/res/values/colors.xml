@@ -1,7 +1,5 @@
 <resources>
-    <color name="stepper_default_circle">#45ab4a</color>
-    <color name="stepper_default_primary">#00b47c</color>
-    <color name="stepper_default_text">#ffffff</color>
-    <color name="stepper_default_horizontal_line">#e1e0e1</color>
-    <color name="stepper_default_vertical_line">#333333</color>
+    <color name="default_circle">#44ab4a</color>
+    <color name="default_line">#b3bdc2</color>
+    <color name="default_text">#ffffff</color>
 </resources>

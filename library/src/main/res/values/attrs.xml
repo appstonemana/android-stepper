@@ -1,12 +1,14 @@
 <resources>
-    <declare-styleable name="stepper">
-        <attr name="show_done_icon" format="boolean" />
+    <declare-styleable name="stp">
+        <attr name="step_count" format="integer" />
         <attr name="anim_duration" format="integer" />
-        <attr name="title" format="string" />
         <attr name="circle_color" format="color" />
         <attr name="circle_radius" format="dimension" />
+        <attr name="circle_stroke_width" format="dimension" />
         <attr name="indicator_radius" format="dimension" />
-        <attr name="line_margin" format="dimension" />
+        <attr name="line_color" format="color" />
         <attr name="line_stroke_width" format="dimension" />
+        <attr name="line_margin" format="dimension" />
+        <attr name="labels" format="reference" />
     </declare-styleable>
 </resources>

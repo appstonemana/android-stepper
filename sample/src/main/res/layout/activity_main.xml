@@ -25,15 +25,13 @@
         <id.kotlin.stepper.HorizontalView
             android:id="@+id/horizontal_stepper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_height="wrap_content" />
 
         <id.kotlin.stepper.VerticalView
             android:id="@+id/vertical_stepper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:circle_color="@color/colorPrimaryDark"
-            app:title="Hello" />
+            app:labels="@array/todos" />
     </LinearLayout>
 </RelativeLayout>
